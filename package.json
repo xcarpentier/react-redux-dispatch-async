@@ -13,9 +13,11 @@
   },
   "devDependencies": {
     "@types/redux": "3.6.0",
+    "@types/react-redux": "7.1.2",
     "typescript": "3.6.3"
   },
   "peerDependencies": {
-    "redux": "4.0.4"
+    "redux": "4.0.4",
+    "react-redux": "7.1.0"
   }
 }
