@@ -2,6 +2,18 @@
 
 A redux middleware to be able to wait async actions with fixed defined suffixes
 
+```
+                                +------------------+
+                         +----> + ACTION_SUCCEEDED +
+                         |      +------------------+
+ +------------------+    |
+ + ACTION_REQUESTED +----+
+ +------------------+    |
+                         |      +-----------------+
+                         +----> +  ACTION_FAILED  +
+                                +-----------------+
+```
+
 ## Default suffixes
 
 - `[...]_REQUESTED`
@@ -26,7 +38,7 @@ dispatchAsyncMiddleware: (c?: {
 useDispatchAsync(action: Action): Promise<DispatchAsyncResult<any>>
 ```
 
-### Return types
+## Return types
 
 ```ts
 interface DispatchAsyncResultSuccess<T = any> {
