@@ -2,12 +2,15 @@
 
 A redux middleware to be able to wait async actions with fixed defined suffixes
 
+## Default suffixes
+
 - `[...]_REQUESTED`
 - `[...]_SUCCEEDED`
 - `[...]_FAILED`
 
+## Configuration
+
 ```ts
-// configuration
 import { createStore, applyMiddleware } from 'redux'
 import { DispatchAsyncMiddleware } from 'redux-dispatch-async'
 import reducers from 'reducers'
@@ -24,8 +27,9 @@ const store = createStore(
 )
 ```
 
+## Usage
+
 ```tsx
-// usage
 import React, { useEffect, useState } from 'react'
 import { dispatchAsync } from 'redux-dispatch-async'
 import { useSelector, useDispatch } from 'react-redux'
