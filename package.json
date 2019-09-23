@@ -1,0 +1,21 @@
+{
+  "name": "redux-dispatch-async",
+  "version": "1.0.0",
+  "description": "redux middleware to be able to wait async actions with fixed defined suffixes",
+  "main": "lib/index.js",
+  "repository": "https://github.com/xcarpentier/redux-dispatch-async",
+  "author": "Xavier Carpentier <xcapetir@gmail.com> (https://xaviercarpentier.com)",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "rm -rf lib/ && node_modules/.bin/tsc",
+    "prepublishOnly": "yarn build"
+  },
+  "devDependencies": {
+    "@types/redux": "3.6.0",
+    "typescript": "3.6.3"
+  },
+  "peerDependencies": {
+    "redux": "4.0.4"
+  }
+}
