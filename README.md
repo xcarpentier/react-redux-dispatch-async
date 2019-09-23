@@ -71,7 +71,7 @@ export type DispatchAsyncResult<T = any> =
 
 ```ts
 import { createStore, applyMiddleware } from 'redux'
-import { dispatchAsyncMiddleware } from 'redux-dispatch-async'
+import { dispatchAsyncMiddleware } from 'react-redux-dispatch-async'
 import reducers from 'reducers'
 
 const store = createStore(
@@ -90,7 +90,7 @@ const store = createStore(
 
 ```tsx
 import React, { useEffect, useState } from 'react'
-import { useDispatchAsync } from 'redux-dispatch-async'
+import { useDispatchAsync } from 'react-redux-dispatch-async'
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function MyUserInterface() {
