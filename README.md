@@ -1,18 +1,27 @@
+<p>
+  <a href="https://www.npmjs.com/package/react-redux-dispatch-async">
+  <img alt="npm version" src="https://badge.fury.io/js/react-redux-dispatch-async.svg"/></a>
+<p>
+
 # react-redux-dispatch-async
 
-A redux middleware to be able to wait async actions with fixed defined suffixes
+A redux middleware to be able to wait async actions (ie. side effects) with fixed defined suffixes.
 
 ```
-                                +------------------+
-                         +----> + ACTION_SUCCEEDED +
-                         |      +------------------+
- +------------------+    |
- + ACTION_REQUESTED +----+
- +------------------+    |
-                         |      +-----------------+
-                         +----> +  ACTION_FAILED  +
-                                +-----------------+
+                                     +------------------+
+                              +----->+ ACTION_SUCCEEDED +
+                              |      +------------------+
+      +------------------+    |
+      + ACTION_REQUESTED +----+
+      +------------------+    |
+                              |      +---------------+
+                              +----->+ ACTION_FAILED +
+                                     +---------------+
 ```
+
+## Install
+
+`yarn add react-redux-dispatch-async`
 
 ## Default suffixes
 
