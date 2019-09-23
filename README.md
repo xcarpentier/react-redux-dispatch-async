@@ -1,4 +1,4 @@
-# redux-dispatch-async
+# react-redux-dispatch-async
 
 A redux middleware to be able to wait async actions with fixed defined suffixes
 
