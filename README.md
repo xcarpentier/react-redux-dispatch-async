@@ -23,9 +23,30 @@ dispatchAsyncMiddleware: (c?: {
 ### Usage
 
 ```ts
+useDispatchAsync(action: Action): Promise<DispatchAsyncResult<any>>
 ```
 
-## Configuration
+### Return types
+
+```ts
+interface DispatchAsyncResultSuccess<T = any> {
+  success: true
+  result: T
+}
+
+interface DispatchAsyncResultError {
+  success: false
+  error: Error
+}
+
+export type DispatchAsyncResult<T = any> =
+  | DispatchAsyncResultSuccess<T>
+  | DispatchAsyncResultError
+```
+
+## Examples
+
+### Configuration
 
 ```ts
 import { createStore, applyMiddleware } from 'redux'
@@ -44,7 +65,7 @@ const store = createStore(
 )
 ```
 
-## Usage
+### Usage
 
 ```tsx
 import React, { useEffect, useState } from 'react'
