@@ -8,11 +8,28 @@ A redux middleware to be able to wait async actions with fixed defined suffixes
 - `[...]_SUCCEEDED`
 - `[...]_FAILED`
 
+## Two functions
+
+### Configuration
+
+```ts
+dispatchAsyncMiddleware: (c?: {
+  request: string
+  success: string
+  failure: string
+}) => redux.Middleware
+```
+
+### Usage
+
+```ts
+```
+
 ## Configuration
 
 ```ts
 import { createStore, applyMiddleware } from 'redux'
-import { DispatchAsyncMiddleware } from 'redux-dispatch-async'
+import { dispatchAsyncMiddleware } from 'redux-dispatch-async'
 import reducers from 'reducers'
 
 const store = createStore(
@@ -31,15 +48,19 @@ const store = createStore(
 
 ```tsx
 import React, { useEffect, useState } from 'react'
-import { dispatchAsync } from 'redux-dispatch-async'
+import { useDispatchAsync } from 'redux-dispatch-async'
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function MyUserInterface() {
   const [loaded, setLoaded] = useState(false)
-  const dispatch = useDispatch()
+
   const data = useSelector(state => state.data)
+  const dispatchAsync = useDispatchAsync()
+  const otherActionAsync = useDispatchAsync(otherAction())
   useEffect(() => {
-    dispatchAsync(dispatch, loadRequest()).then(() => setLoaded(true))
+    dispatchAsync(loadRequest())
+      .then(() => otherActionAsync())
+      .then(() => setLoaded(true))
   }, [])
   return loaded ? <AnotherComponent {...{ data }} /> : <AppLoader />
 }
