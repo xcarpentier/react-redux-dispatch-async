@@ -49,7 +49,6 @@ const store = createStore(
 ```tsx
 import React, { useEffect, useState } from 'react'
 import { useDispatchAsync } from 'react-redux-dispatch-async'
-import { useSelector, useDispatch } from 'react-redux'
 
 export default function MyUserInterface({ idFromProps }) {
   const [loaded, setLoaded] = useState(false)
