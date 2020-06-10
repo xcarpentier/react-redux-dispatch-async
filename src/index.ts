@@ -1,3 +1,3 @@
-export { dispatchAsyncMiddleware } from './DispatchAsyncMiddleware'
-export { dispatchAsync } from './dispatchAsync'
-export { useDispatchAsync } from './useDispatchAsync'
+export * from './dispatchAsync'
+export * from './DispatchAsyncMiddleware'
+export * from './useDispatchAsync'

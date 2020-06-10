@@ -36,7 +36,7 @@ const store = createStore(
   reducers,
   applyMiddleware(
     dispatchAsyncMiddleware({
-      request: 'REQUEST', // custom suffixes
+      request: 'REQUEST', // 👈 define or not your own async suffixes
       success: 'SUCCESS',
       failure: 'FAILURE',
     }),
@@ -47,24 +47,22 @@ const store = createStore(
 ### Usage
 
 ```tsx
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatchAsync } from 'react-redux-dispatch-async'
 
-export default function MyUserInterface({ idFromProps }) {
-  const [loaded, setLoaded] = useState(false)
+export default function MyUserInterface({ id }: { id: string }) {
+  const { status, result } = useDispatchAsync(getUser, [id])
 
-  const data = useSelector(state => state.data)
-  const dispatchAsync = useDispatchAsync()
-  const otherActionAsync = useDispatchAsync(otherAction())
-  
-  // here 
-  useEffect(() => {
-    dispatchAsync(loadRequest(idFromProps))
-      .then(() => otherActionAsync())
-      .then(() => setLoaded(true))
-  }, [idFromProps])
-  
-  return loaded ? <AnotherComponent {...{ data }} /> : <AppLoader />
+  switch (status) {
+    case 'loading':
+      return <AppLoader />
+    case 'error':
+      return <Text>Oops</Text>
+    case 'success':
+      return <User {...result} />
+    default:
+      return null
+  }
 }
 ```
 
@@ -89,25 +87,29 @@ dispatchAsyncMiddleware: (c?: {
 ### Usage
 
 ```ts
-useDispatchAsync(action: Action): Promise<DispatchAsyncResult<any>>
-```
+// main hook
+useDispatchAsync<T = any>(actionFunction?: (...args: any[]) => Action<T>, deps: any[] = []): UseDispatchAsyncUnion
 
-## Return types
-
-```ts
+/// types
+interface UseDispatchAsyncStatusReturn {
+  status: 'loading' | 'success' | 'error'
+  result: any
+}
+type UseDispatchAsyncReturn = (
+  action: Action,
+) => ReturnType<typeof dispatchAsync>
+type UseDispatchAsyncUnion =
+  | UseDispatchAsyncReturn
+  | UseDispatchAsyncStatusReturn
 interface DispatchAsyncResultSuccess<T = any> {
   success: true
   result: T
 }
-
 interface DispatchAsyncResultError {
   success: false
   error: Error
 }
-
 export type DispatchAsyncResult<T = any> =
   | DispatchAsyncResultSuccess<T>
   | DispatchAsyncResultError
 ```
-
-
