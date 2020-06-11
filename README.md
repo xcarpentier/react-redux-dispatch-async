@@ -5,7 +5,7 @@
 
 # react-redux-dispatch-async
 
-A redux middleware to be able to wait async actions (ie. side effects) with fixed defined suffixes.
+A redux middleware to be able to wait async actions (ie. side effects) with **fixed defined suffixes**.
 
 ```
                                      +------------------+
