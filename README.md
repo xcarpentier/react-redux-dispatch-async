@@ -25,25 +25,6 @@ A redux middleware to be able to wait async actions (ie. side effects) with **fi
 
 ## Examples
 
-### Configuration
-
-```ts
-import { createStore, applyMiddleware } from 'redux'
-import { createDispatchAsyncMiddleware } from 'react-redux-dispatch-async'
-import reducers from 'reducers'
-
-const store = createStore(
-  reducers,
-  applyMiddleware(
-    createDispatchAsyncMiddleware({
-      request: 'REQUEST', // 👈 define your own async suffixes
-      success: 'SUCCESS',
-      failure: 'FAILURE',
-    }),
-  ),
-)
-```
-
 ### Usage
 
 ```tsx
@@ -65,6 +46,27 @@ export default function MyUserInterface({ id }: { id: string }) {
   }
 }
 ```
+
+### Configuration
+
+```ts
+import { createStore, applyMiddleware } from 'redux'
+import { createDispatchAsyncMiddleware } from 'react-redux-dispatch-async'
+import reducers from 'reducers'
+
+const store = createStore(
+  reducers,
+  applyMiddleware(
+    createDispatchAsyncMiddleware({
+      request: 'REQUEST', // 👈 define your own async suffixes
+      success: 'SUCCESS',
+      failure: 'FAILURE',
+    }),
+  ),
+)
+```
+
+
 
 ## Default suffixes
 
