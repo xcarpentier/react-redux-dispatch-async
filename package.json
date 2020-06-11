@@ -12,7 +12,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn test && yarn build"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "3.3.0",
