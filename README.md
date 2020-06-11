@@ -1,6 +1,9 @@
 <p>
   <a href="https://www.npmjs.com/package/react-redux-dispatch-async">
   <img alt="npm version" src="https://badge.fury.io/js/react-redux-dispatch-async.svg"/></a>
+  <a href="#hire-an-expert">
+      <img src="https://img.shields.io/badge/%F0%9F%92%AA-hire%20an%20expert-brightgreen"/>
+    </a>
 <p>
 
 # react-redux-dispatch-async
