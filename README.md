@@ -35,7 +35,8 @@ import React from 'react'
 import { useDispatchAsync } from 'react-redux-dispatch-async'
 
 export default function MyUserInterface({ id }: { id: string }) {
-  const { status, result, error } = useDispatchAsync(getUser, [id])
+  // 👉 pass action and arguments into the array
+  const { status, result, error } = useDispatchAsync(getUserActionRequest, [id])
 
   switch (status) {
     case 'loading':
