@@ -1,47 +1,50 @@
-import { Middleware, Action } from 'redux'
+import { Action, Middleware } from 'redux'
 import { listeners } from './ActionListener'
 
 export interface ActionSuffix {
-    request: string
-    success: string
-    failure: string
+  request: string
+  success: string
+  failure: string
+  cancel?: string
 }
 
 export const ConfigMiddleware: {
-    suffixes: ActionSuffix
-    initialized: boolean
+  suffixes: ActionSuffix
+  initialized: boolean
 } = {
-    initialized: false,
-    suffixes: {
-        request: 'REQUESTED',
-        success: 'SUCCEEDED',
-        failure: 'FAILED',
-    },
+  initialized: false,
+  suffixes: {
+    request: 'REQUESTED',
+    success: 'SUCCEEDED',
+    failure: 'FAILED',
+    cancel: undefined,
+  },
 }
 
 const isAsyncAction = (config: ActionSuffix, action: Action) =>
-    action.type.endsWith(config.request) ||
-    action.type.endsWith(config.success) ||
-    action.type.endsWith(config.failure)
+  action.type.endsWith(config.request) ||
+  action.type.endsWith(config.success) ||
+  action.type.endsWith(config.failure)
 
-export const dispatchAsyncMiddleware: (c?: ActionSuffix) => Middleware = (
-    config?: ActionSuffix,
-) => () => next => action => {
-    try {
-        if (config && !ConfigMiddleware.initialized) {
-            ConfigMiddleware.suffixes = config
-            ConfigMiddleware.initialized = true
-        }
-        if (
-            isAsyncAction(ConfigMiddleware.suffixes, action) &&
-            Object.keys(listeners).length > 0
-        ) {
-            for (const listener of Object.values(listeners)) {
-                listener(action)
-            }
-        }
-    } catch (error) {
-        console.error(error)
+export const createDispatchAsyncMiddleware: (
+  config?: ActionSuffix,
+) => Middleware = (config?: ActionSuffix) => () => (next) => (action) => {
+  try {
+    if (config && !ConfigMiddleware.initialized) {
+      ConfigMiddleware.suffixes = config
+      ConfigMiddleware.initialized = true
     }
-    return next(action)
+
+    if (
+      isAsyncAction(ConfigMiddleware.suffixes, action) &&
+      Object.keys(listeners).length > 0
+    ) {
+      for (const listener of Object.values(listeners)) {
+        listener(action)
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+  return next(action)
 }

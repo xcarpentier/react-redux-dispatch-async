@@ -1,40 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
 import { dispatchAsync } from './dispatchAsync'
 
-export interface Status {
+export interface UseDispatchAsync<R = any> {
   status: 'loading' | 'success' | 'error'
+  result?: R
+  error?: Error
 }
-export interface UseDispatchAsyncStatusReturnLoading extends Status {}
-export interface UseDispatchAsyncStatusReturnSuccess<R = any> extends Status {
-  result: R
-}
-export interface UseDispatchAsyncStatusReturnError extends Status {
-  error: Error
-}
-export type UseDispatchAsyncStatusReturn<R = any> =
-  | UseDispatchAsyncStatusReturnLoading
-  | UseDispatchAsyncStatusReturnSuccess<R>
-  | UseDispatchAsyncStatusReturnError
-export type UseDispatchAsyncReturn = (
-  action: Action,
-) => ReturnType<typeof dispatchAsync>
-export type UseDispatchAsyncUnion =
-  | UseDispatchAsyncReturn
-  | UseDispatchAsyncStatusReturn
 
 // the hook
 export function useDispatchAsync<R = any>(
-  actionFunction?: (...args: any[]) => Action,
+  actionFunction: (...args: any[]) => Action & { payload: any },
   deps: any[] = [],
-): UseDispatchAsyncUnion {
+): UseDispatchAsync<R> {
   const dispatch = useDispatch()
-
-  if (!actionFunction) {
-    // ♻️ Return the `dispatchAsync` function to keep older package API & prevent breaking changes
-    return (action: Action) => dispatchAsync<R>(dispatch, action)
-  }
 
   // 👉 Better flow with informative & useful return
   const [result, setResult] = useState<R | undefined>(undefined)
@@ -51,9 +31,9 @@ export function useDispatchAsync<R = any>(
       })
   }, deps)
 
-  return {
-    status: !!(result || error) ? 'loading' : result ? 'success' : 'error',
-    result,
-    error,
-  }
+  const status = useMemo(
+    () => (!result && !error ? 'loading' : result ? 'success' : 'error'),
+    [result, error],
+  )
+  return { status, result, error }
 }

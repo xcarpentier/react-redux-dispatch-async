@@ -29,14 +29,14 @@ A redux middleware to be able to wait async actions (ie. side effects) with fixe
 
 ```ts
 import { createStore, applyMiddleware } from 'redux'
-import { dispatchAsyncMiddleware } from 'react-redux-dispatch-async'
+import { createDispatchAsyncMiddleware } from 'react-redux-dispatch-async'
 import reducers from 'reducers'
 
 const store = createStore(
   reducers,
   applyMiddleware(
-    dispatchAsyncMiddleware({
-      request: 'REQUEST', // 👈 define or not your own async suffixes
+    createDispatchAsyncMiddleware({
+      request: 'REQUEST', // 👈 define your own async suffixes
       success: 'SUCCESS',
       failure: 'FAILURE',
     }),
@@ -51,13 +51,13 @@ import React from 'react'
 import { useDispatchAsync } from 'react-redux-dispatch-async'
 
 export default function MyUserInterface({ id }: { id: string }) {
-  const { status, result } = useDispatchAsync(getUser, [id])
+  const { status, result, error } = useDispatchAsync(getUser, [id])
 
   switch (status) {
     case 'loading':
       return <AppLoader />
     case 'error':
-      return <Text>Oops</Text>
+      return <Text>{error.message}</Text>
     case 'success':
       return <User {...result} />
     default:
@@ -84,23 +84,23 @@ dispatchAsyncMiddleware: (c?: {
 }) => redux.Middleware
 ```
 
-### Usage
+### Type
 
 ```ts
 // main hook
-useDispatchAsync<T = any>(actionFunction?: (...args: any[]) => Action<T>, deps: any[] = []): UseDispatchAsyncUnion
+type useDispatchAsync = <R = any>(
+  actionFunction?: (...args: any[]) => Action<T>,
+  deps: any[] = [],
+) => UseDispatchAsync<R>
 
-/// types
-interface UseDispatchAsyncStatusReturn {
+/// return type
+export interface UseDispatchAsync<R = any> {
   status: 'loading' | 'success' | 'error'
-  result: any
+  result?: R
+  error?: Error
 }
-type UseDispatchAsyncReturn = (
-  action: Action,
-) => ReturnType<typeof dispatchAsync>
-type UseDispatchAsyncUnion =
-  | UseDispatchAsyncReturn
-  | UseDispatchAsyncStatusReturn
+
+// other types for oldest usage
 interface DispatchAsyncResultSuccess<T = any> {
   success: true
   result: T

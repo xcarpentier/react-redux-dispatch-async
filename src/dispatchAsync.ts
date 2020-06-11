@@ -25,14 +25,14 @@ export function dispatchAsync<T = any>(
       `_${ConfigMiddleware.suffixes.request}`,
       '',
     )
-    const unsubscribe = addActionListener((resultAction: Action) => {
+    const unsubscribe = addActionListener<T>((resultAction) => {
       if (
         resultAction.type ===
         `${actionNameBase}_${ConfigMiddleware.suffixes.success}`
       ) {
         resolve({
           success: true,
-          result: (resultAction as any).payload,
+          result: resultAction.payload,
         })
         unsubscribe()
       } else if (
@@ -40,8 +40,8 @@ export function dispatchAsync<T = any>(
         `${actionNameBase}_${ConfigMiddleware.suffixes.failure}`
       ) {
         const error =
-          (resultAction as any).payload instanceof Error
-            ? (resultAction as any)
+          resultAction.payload instanceof Error
+            ? resultAction.payload
             : new Error(`Action failure: ${actionNameBase}`)
         resolve({ success: false, error })
         unsubscribe()
