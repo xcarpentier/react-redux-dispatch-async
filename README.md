@@ -50,6 +50,7 @@ export default function MyUserInterface({ id }: { id: string }) {
   }
 }
 ```
+If you need more examples you can go to [github](https://github.com/xcarpentier/react-redux-dispatch-async-example) or to [codesandbox](https://codesandbox.io/s/react-redux-dispatch-async-rij31?file=/src/UserContainer.tsx).
 
 ### Configuration
 
