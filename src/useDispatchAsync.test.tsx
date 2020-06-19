@@ -28,6 +28,11 @@ const loadUsersFailure = (error: Error) => ({
   payload: error,
 })
 
+const dumbRequest = () => ({
+  type: 'DUMB_REQUESTED',
+  payload: undefined,
+})
+
 const ReduxProvider = ({
   children,
   store,
@@ -75,7 +80,10 @@ test('should return success status', async () => {
   expect(result.current.status).toBe('loading')
   await wait(() => result.current.status !== 'loading')
   expect(result.current.status).toBe('success')
-  expect(result.current.result).toEqual({ id: '1', name: 'Xavier' })
+  expect(result.current.status === 'success' && result.current.result).toEqual({
+    id: '1',
+    name: 'Xavier',
+  })
 })
 
 test('should return error status', async () => {
@@ -86,5 +94,20 @@ test('should return error status', async () => {
   expect(result.current.status).toBe('loading')
   await wait(() => result.current.status !== 'loading')
   expect(result.current.status).toBe('error')
-  expect(result.current.error?.message).toBe('load user failed')
+  expect(
+    result.current.status === 'error' && result.current.error?.message,
+  ).toBe('load user failed')
+})
+
+test('should return timeout status', async () => {
+  const { result, wait } = renderHook(
+    () =>
+      useDispatchAsync<{ id: string; name: string }>(dumbRequest, [], {
+        timeoutInMilliseconds: 500,
+      }),
+    { wrapper },
+  )
+  expect(result.current.status).toBe('loading')
+  await wait(() => result.current.status !== 'loading')
+  expect(result.current.status).toBe('timeout')
 })

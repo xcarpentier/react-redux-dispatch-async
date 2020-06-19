@@ -45,6 +45,8 @@ export default function MyUserInterface({ id }: { id: string }) {
       return <Text>{error.message}</Text>
     case 'success':
       return <User {...result} />
+    case 'timeout':
+      return <Text>{'timeout ¯\\_(ツ)_//¯'}</Text>
     default:
       return null
   }
