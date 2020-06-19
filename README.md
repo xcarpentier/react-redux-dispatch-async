@@ -8,18 +8,23 @@
 
 # react-redux-dispatch-async
 
-👉 REDUX _middleware_ waiting async _actions_ with **SUFFIXES** 👈
+👉 REDUX _middleware_ & **HOOK** 🎉 waiting async _actions_ with **SUFFIXES** 👈
 
 ```
-                                     +------------------+
-                              +----->+ ACTION_SUCCEEDED +
+
+      +------------------+
+      | ACTION_REQUESTED |----+
+      +------------------+    |      +------------------+
+                              +----->| ACTION_SUCCEEDED |
                               |      +------------------+
-      +------------------+    |
-      + ACTION_REQUESTED +----+
-      +------------------+    |
-                              |      +------------------+
-                              +----->+  ACTION_FAILED   +
-                                     +------------------+
+                              |
+                              |      +--------------------+
+                              +----->|   ACTION_FAILED    |
+                              |      +--------------------+
+                              |
+                              |      +--------------------+
+                              +----->|  ACTION_CANCELED  |
+                                     +--------------------+
 ```
 
 ## Install
@@ -47,6 +52,8 @@ export default function MyUserInterface({ id }: { id: string }) {
       return <User {...result} />
     case 'timeout':
       return <Text>{'timeout ¯\\_(ツ)_//¯'}</Text>
+    case 'canceled':
+      return <Text>{'canceled ¯\\_(ツ)_//¯'}</Text>
     default:
       return null
   }
@@ -69,6 +76,7 @@ const store = createStore(
       request: 'REQUEST', // 👈 define your own async suffixes
       success: 'SUCCESS',
       failure: 'FAILURE',
+      cancel: 'CANCEL', // optional
     }),
   ),
 )
@@ -79,6 +87,7 @@ const store = createStore(
 - `[...]_REQUESTED`
 - `[...]_SUCCEEDED`
 - `[...]_FAILED`
+- `[...]_CANCELED`
 
 ## Two functions
 
@@ -89,6 +98,7 @@ dispatchAsyncMiddleware: (c?: {
   request: string
   success: string
   failure: string
+  cancel?: string
 }) => redux.Middleware
 ```
 

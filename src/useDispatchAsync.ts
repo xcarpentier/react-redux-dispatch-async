@@ -17,6 +17,10 @@ interface ResultError {
   error: Error
 }
 
+interface ResultCancel {
+  status: 'canceled'
+}
+
 interface ResultTimeout {
   status: 'timeout'
 }
@@ -30,6 +34,7 @@ export type UseDispatchAsync<R = unknown> =
   | ResultSuccess<R>
   | ResultError
   | ResultTimeout
+  | ResultCancel
   | ResultUnknown
 
 export type Status = Pick<UseDispatchAsync, 'status'>['status']
@@ -52,6 +57,7 @@ export function useDispatchAsync<R = any>(
   const [result, setResult] = useState<R | undefined>(undefined)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [isTimeout, setIsTimeout] = useState<boolean>(false)
+  const [isCancel, setIsCancel] = useState<boolean>(false)
 
   // 👉 race condition to get last update
   // https://sebastienlorber.com/handling-api-request-race-conditions-in-react
@@ -73,8 +79,18 @@ export function useDispatchAsync<R = any>(
       .then((res) => {
         // filtering last update promise
         if (currentPromise === lastPromise.current) {
+          // filtering timeout
           if (typeof res !== 'boolean') {
-            res.success ? setResult(res.result) : setError(res.error)
+            // filtering success
+            if (res.success) {
+              setResult(res.result)
+            } else {
+              if (!res.canceled) {
+                setError(res.error)
+              } else {
+                setIsCancel(true)
+              }
+            }
           } else {
             setIsTimeout(true)
           }
@@ -89,11 +105,16 @@ export function useDispatchAsync<R = any>(
   }, deps)
 
   const status: Status = useMemo(() => {
-    if (!result && !error && !isTimeout) {
+    if (!result && !error && !isTimeout && !isCancel) {
       return 'loading'
     }
+
     if (result) {
       return 'success'
+    }
+
+    if (isCancel) {
+      return 'canceled'
     }
 
     if (error) {
@@ -105,11 +126,12 @@ export function useDispatchAsync<R = any>(
     }
 
     return 'unknown'
-  }, [result, error, isTimeout])
+  }, [result, error, isTimeout, isCancel])
 
   switch (status) {
     case 'loading':
     case 'timeout':
+    case 'canceled':
       return { status }
     case 'success':
       return { result: result!, status }

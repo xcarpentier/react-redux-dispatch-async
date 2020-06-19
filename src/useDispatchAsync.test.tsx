@@ -33,6 +33,16 @@ const dumbRequest = () => ({
   payload: undefined,
 })
 
+const cancelableActionRequest = () => ({
+  type: 'CANCELABLE_ACTION_REQUESTED',
+  payload: undefined,
+})
+
+const cancelableActionCancel = () => ({
+  type: 'CANCELABLE_ACTION_CANCELED',
+  payload: undefined,
+})
+
 const ReduxProvider = ({
   children,
   store,
@@ -64,6 +74,10 @@ sagaMiddleware.run(function*() {
     takeEvery('LOAD_USERS_REQUESTED', function*() {
       yield delay(1000)
       yield put(loadUsersFailure(new Error('load user failed')))
+    }),
+    takeEvery('CANCELABLE_ACTION_REQUESTED', function*() {
+      yield delay(1000)
+      yield put(cancelableActionCancel())
     }),
   ])
 })
@@ -110,4 +124,15 @@ test('should return timeout status', async () => {
   expect(result.current.status).toBe('loading')
   await wait(() => result.current.status !== 'loading')
   expect(result.current.status).toBe('timeout')
+})
+
+test('should return cancel status', async () => {
+  const { result, wait } = renderHook(
+    () =>
+      useDispatchAsync<{ id: string; name: string }>(cancelableActionRequest),
+    { wrapper },
+  )
+  expect(result.current.status).toBe('loading')
+  await wait(() => result.current.status !== 'loading')
+  expect(result.current.status).toBe('canceled')
 })

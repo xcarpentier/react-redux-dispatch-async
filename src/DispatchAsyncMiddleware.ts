@@ -1,12 +1,20 @@
 import { Action, Middleware } from 'redux'
 import { listeners } from './ActionListener'
 
-export interface ActionSuffix {
+export interface NormalSuffix {
   request: string
   success: string
   failure: string
-  cancel?: string
 }
+
+export interface CancelableSuffix {
+  request: string
+  success: string
+  failure: string
+  cancel: string
+}
+
+export type ActionSuffix = NormalSuffix | CancelableSuffix
 
 export const ConfigMiddleware: {
   suffixes: ActionSuffix
@@ -17,14 +25,15 @@ export const ConfigMiddleware: {
     request: 'REQUESTED',
     success: 'SUCCEEDED',
     failure: 'FAILED',
-    cancel: undefined,
+    cancel: 'CANCELED',
   },
 }
 
 const isAsyncAction = (config: ActionSuffix, action: Action) =>
   action.type.endsWith(config.request) ||
   action.type.endsWith(config.success) ||
-  action.type.endsWith(config.failure)
+  action.type.endsWith(config.failure) ||
+  action.type.endsWith((config as CancelableSuffix).cancel)
 
 export const createDispatchAsyncMiddleware: (
   config?: ActionSuffix,

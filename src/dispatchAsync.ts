@@ -1,6 +1,6 @@
 import { Action } from 'redux'
 import { addActionListener } from './ActionListener'
-import { ConfigMiddleware } from './DispatchAsyncMiddleware'
+import { CancelableSuffix, ConfigMiddleware } from './DispatchAsyncMiddleware'
 
 interface DispatchAsyncResultSuccess<T = any> {
   success: true
@@ -10,6 +10,7 @@ interface DispatchAsyncResultSuccess<T = any> {
 interface DispatchAsyncResultError {
   success: false
   error: Error
+  canceled?: true
 }
 
 export type DispatchAsyncResult<T = any> =
@@ -44,6 +45,18 @@ export function dispatchAsync<T = any>(
             ? resultAction.payload
             : new Error(`Action failure: ${actionNameBase}`)
         resolve({ success: false, error })
+        unsubscribe()
+      } else if (
+        resultAction.type ===
+        `${actionNameBase}_${
+          (ConfigMiddleware.suffixes as CancelableSuffix).cancel
+        }`
+      ) {
+        resolve({
+          success: false,
+          error: new Error('canceled'),
+          canceled: true,
+        })
         unsubscribe()
       }
     })
