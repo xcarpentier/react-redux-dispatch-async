@@ -8,7 +8,7 @@
 
 # react-redux-dispatch-async
 
-👉 Redux middleware to wait async actions with **fixed defined suffixes**.
+👉 REDUX _middleware_ waiting async _actions_ with **SUFFIXES** 👈
 
 ```
                                      +------------------+
@@ -52,6 +52,7 @@ export default function MyUserInterface({ id }: { id: string }) {
   }
 }
 ```
+
 If you need more examples you can go to [github](https://github.com/xcarpentier/react-redux-dispatch-async-example) or to [codesandbox](https://codesandbox.io/s/react-redux-dispatch-async-rij31?file=/src/UserContainer.tsx).
 
 ### Configuration
@@ -72,8 +73,6 @@ const store = createStore(
   ),
 )
 ```
-
-
 
 ## Default suffixes
 
