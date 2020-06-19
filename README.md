@@ -35,6 +35,8 @@
 
 ### Race condition to execute only the promise if multiple update occur in nearly same time
 
+[> Dig into it](https://github.com/xcarpentier/react-redux-dispatch-async/blob/master/src/useDispatchAsync.ts#L65)
+
 ### Hook give you helpful STATUS you can deal with into your own component
 
 - **loading**: action start but not yet completed
