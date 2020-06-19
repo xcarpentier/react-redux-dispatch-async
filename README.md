@@ -39,7 +39,7 @@
 
 ### Hook give you helpful STATUS you can deal with into your own component
 
-- `**loading**`: action start but not yet completed
+- **`loading`**: action start but not yet completed
 - **success**: action completed, you can get the result
 - **error**: action failed and you can get the error
 - **timeout**: action not completed for tool long (ie. options?.timeoutInMilliseconds)
