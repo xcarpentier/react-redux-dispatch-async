@@ -1,6 +1,6 @@
 {
   "name": "react-redux-dispatch-async",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "hooks & redux middleware to be able to wait async actions with fixed defined suffixes",
   "main": "dist/index.js",
   "type": "dist/index.d.ts",
