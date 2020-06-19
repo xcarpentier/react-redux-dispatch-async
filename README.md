@@ -31,6 +31,19 @@
 
 `yarn add react-redux-dispatch-async`
 
+## Features
+
+### Race condition to execute only the promise if multiple update occur in nearly same time
+
+### Hook give you helpful STATUS you can deal with into your own component
+
+- **loading**: action start but not yet completed
+- **success**: action completed, you can get the result
+- **error**: action failed and you can get the error
+- **timeout**: action not completed for tool long (ie. options?.timeoutInMilliseconds)
+- **canceled**: action canceled
+- **unknown**: should never happen
+
 ## Examples
 
 ### Usage
@@ -106,17 +119,49 @@ dispatchAsyncMiddleware: (c?: {
 
 ```ts
 // main hook
+interface Options {
+  timeoutInMilliseconds?: number
+}
 type useDispatchAsync = <R = any>(
   actionFunction?: (...args: any[]) => Action<T>,
   deps: any[] = [],
+  options: Options = { timeoutInMilliseconds: 15000 }, // wait 15s
 ) => UseDispatchAsync<R>
 
 /// return type
-export interface UseDispatchAsync<R = any> {
-  status: 'loading' | 'success' | 'error'
-  result?: R
-  error?: Error
+interface ResultLoading {
+  status: 'loading'
 }
+
+interface ResultSuccess<R = unknown> {
+  status: 'success'
+  result: R
+}
+
+interface ResultError {
+  status: 'error'
+  error: Error
+}
+
+interface ResultCancel {
+  status: 'canceled'
+}
+
+interface ResultTimeout {
+  status: 'timeout'
+}
+
+interface ResultUnknown {
+  status: 'unknown'
+}
+
+export type UseDispatchAsync<R = unknown> =
+  | ResultLoading
+  | ResultSuccess<R>
+  | ResultError
+  | ResultTimeout
+  | ResultCancel
+  | ResultUnknown
 
 // other types for oldest usage
 interface DispatchAsyncResultSuccess<T = any> {
