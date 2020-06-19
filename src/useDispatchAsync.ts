@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
-import { dispatchAsync } from './dispatchAsync'
+import { dispatchAsync, DispatchAsyncResult } from './dispatchAsync'
 
 interface ResultLoading {
   status: 'loading'
@@ -38,6 +38,8 @@ export interface Options {
   timeoutInMilliseconds?: number
 }
 
+type InnerPromiseType = Promise<boolean | DispatchAsyncResult>
+
 // the hook
 export function useDispatchAsync<R = any>(
   actionFunction: (...args: any[]) => Action & { payload: any },
@@ -51,6 +53,11 @@ export function useDispatchAsync<R = any>(
   const [error, setError] = useState<Error | undefined>(undefined)
   const [isTimeout, setIsTimeout] = useState<boolean>(false)
 
+  // 👉 race condition to get last update
+  // https://sebastienlorber.com/handling-api-request-race-conditions-in-react
+  // A ref to store the last issued pending request
+  const lastPromise = useRef<InnerPromiseType>()
+
   useEffect(() => {
     const actionPromise = dispatchAsync<R>(dispatch, actionFunction(...deps))
 
@@ -58,17 +65,26 @@ export function useDispatchAsync<R = any>(
       setTimeout(() => resolve(false), options?.timeoutInMilliseconds),
     )
 
-    Promise.race([actionPromise, timeoutPromise])
+    const currentPromise = Promise.race([actionPromise, timeoutPromise])
+
+    lastPromise.current = currentPromise
+
+    currentPromise
       .then((res) => {
-        if (typeof res !== 'boolean') {
-          res.success ? setResult(res.result) : setError(res.error)
-        } else {
-          setIsTimeout(true)
+        // filtering last update promise
+        if (currentPromise === lastPromise.current) {
+          if (typeof res !== 'boolean') {
+            res.success ? setResult(res.result) : setError(res.error)
+          } else {
+            setIsTimeout(true)
+          }
         }
       })
       .catch((e) => {
-        console.error('useDispatchAsync: Unexpected error', e)
-        setError(e)
+        if (currentPromise === lastPromise.current) {
+          console.error('useDispatchAsync: Unexpected error', e)
+          setError(e)
+        }
       })
   }, deps)
 
