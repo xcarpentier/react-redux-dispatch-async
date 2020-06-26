@@ -47,18 +47,24 @@ export interface Options {
 
 type InnerPromiseType = Promise<boolean | DispatchAsyncResult>
 
+// 👉 backward compatibility
+export function useCompatDispatchAsync<R = any>(
+  action?: Action,
+): CompatActionResult<R> {
+  const dispatch = useDispatch()
+  if (action) {
+    return () => dispatchAsync<R>(dispatch, action)
+  }
+  return (action: Action) => dispatchAsync<R>(dispatch, action)
+}
+
 // the hook
 export function useDispatchAsync<R = any>(
-  actionFunction?: (...args: any[]) => Action & { payload: any },
+  actionFunction: (...args: any[]) => Action & { payload: any },
   deps: any[] = [],
   options: Options = { timeoutInMilliseconds: 15000 }, // wait 15s
-): UseDispatchAsync<R> | CompatActionResult<R> {
+): UseDispatchAsync<R> {
   const dispatch = useDispatch()
-
-  // 👉 backward compatibility
-  if (!actionFunction) {
-    return (action: Action) => dispatchAsync<R>(dispatch, action)
-  }
 
   // 👉 Better flow with informative & useful return
   const [result, setResult] = useState<R | undefined>(undefined)
