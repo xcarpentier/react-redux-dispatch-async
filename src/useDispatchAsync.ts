@@ -29,6 +29,8 @@ interface ResultUnknown {
   status: 'unknown'
 }
 
+type CompatActionResult<R> = (action: Action) => Promise<DispatchAsyncResult<R>>
+
 export type UseDispatchAsync<R = unknown> =
   | ResultLoading
   | ResultSuccess<R>
@@ -47,11 +49,16 @@ type InnerPromiseType = Promise<boolean | DispatchAsyncResult>
 
 // the hook
 export function useDispatchAsync<R = any>(
-  actionFunction: (...args: any[]) => Action & { payload: any },
+  actionFunction?: (...args: any[]) => Action & { payload: any },
   deps: any[] = [],
   options: Options = { timeoutInMilliseconds: 15000 }, // wait 15s
-): UseDispatchAsync<R> {
+): UseDispatchAsync<R> | CompatActionResult<R> {
   const dispatch = useDispatch()
+
+  // 👉 backward compatibility
+  if (!actionFunction) {
+    return (action: Action) => dispatchAsync<R>(dispatch, action)
+  }
 
   // 👉 Better flow with informative & useful return
   const [result, setResult] = useState<R | undefined>(undefined)
