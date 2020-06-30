@@ -42,7 +42,7 @@
 - ⏳ **`loading`**: action start but not yet completed
 - 👏 **`success`**: action completed, you can get the result
 - 😱 **`error`**: action failed and you can get the error
-- 👎 **`timeout`**: action not completed for tool long (ie. options?.timeoutInMilliseconds)
+- 👎 **`timeout`**: action not completed for too long (ie. options?.timeoutInMilliseconds)
 - 👋 **`canceled`**: action canceled
 - 😮 **`unknown`**: should never happen
 
