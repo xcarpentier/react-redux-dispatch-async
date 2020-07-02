@@ -38,7 +38,11 @@ export default function MyUserInterface({ id }: { id: string }) {
 
 If you need more examples you can go to [github](https://github.com/xcarpentier/react-redux-dispatch-async-example) or to [codesandbox](https://codesandbox.io/s/react-redux-dispatch-async-rij31?file=/src/UserContainer.tsx).
 
+## Install
 
+`yarn add react-redux-dispatch-async`
+
+## Features
 ```
 
       +------------------+
@@ -56,12 +60,6 @@ If you need more examples you can go to [github](https://github.com/xcarpentier/
                                      +--------------------+
 ```
 
-## Install
-
-`yarn add react-redux-dispatch-async`
-
-## Features
-
 ### Race condition to execute only the promise if multiple update occur in nearly same time
 
 [> Dig into it](https://github.com/xcarpentier/react-redux-dispatch-async/blob/master/src/useDispatchAsync.ts#L65)
@@ -74,8 +72,6 @@ If you need more examples you can go to [github](https://github.com/xcarpentier/
 - 👎 **`timeout`**: action not completed for too long (ie. options?.timeoutInMilliseconds)
 - 👋 **`canceled`**: action canceled
 - 😮 **`unknown`**: should never happen
-
-
 
 ### Configuration
 
