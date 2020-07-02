@@ -57,15 +57,15 @@ import { useDispatchAsync } from 'react-redux-dispatch-async'
 
 export default function MyUserInterface({ id }: { id: string }) {
   // 👉 pass action and arguments into the array
-  const { status, result, error } = useDispatchAsync(getUserActionRequest, [id])
+  const response = useDispatchAsync(getUserActionRequest, [id])
 
-  switch (status) {
+  switch (response.status) {
     case 'loading':
       return <AppLoader />
     case 'error':
-      return <Text>{error.message}</Text>
+      return <Text>{response.error.message}</Text>
     case 'success':
-      return <User {...result} />
+      return <User {...response.result} />
     case 'timeout':
       return <Text>{'timeout ¯\\_(ツ)_//¯'}</Text>
     case 'canceled':
