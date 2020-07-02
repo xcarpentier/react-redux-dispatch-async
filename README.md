@@ -12,7 +12,6 @@
 👉 REDUX _middleware_ & **HOOK** 🎉 waiting async _actions_ with **SUFFIXES** 👈
 
 ```tsx
-import React from 'react'
 import { useDispatchAsync } from 'react-redux-dispatch-async'
 
 export default function MyUserInterface({ id }: { id: string }) {
