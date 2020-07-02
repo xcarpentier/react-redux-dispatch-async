@@ -11,6 +11,34 @@
 
 👉 REDUX _middleware_ & **HOOK** 🎉 waiting async _actions_ with **SUFFIXES** 👈
 
+```tsx
+import React from 'react'
+import { useDispatchAsync } from 'react-redux-dispatch-async'
+
+export default function MyUserInterface({ id }: { id: string }) {
+  // 👉 pass action and arguments into the array
+  const response = useDispatchAsync(getUserActionRequest, [id])
+
+  switch (response.status) {
+    case 'loading':
+      return <AppLoader />
+    case 'error':
+      return <Text>{response.error.message}</Text>
+    case 'success':
+      return <User {...response.result} />
+    case 'timeout':
+      return <Text>{'timeout ¯\\_(ツ)_//¯'}</Text>
+    case 'canceled':
+      return <Text>{'canceled ¯\\_(ツ)_//¯'}</Text>
+    default:
+      return null
+  }
+}
+```
+
+If you need more examples you can go to [github](https://github.com/xcarpentier/react-redux-dispatch-async-example) or to [codesandbox](https://codesandbox.io/s/react-redux-dispatch-async-rij31?file=/src/UserContainer.tsx).
+
+
 ```
 
       +------------------+
@@ -47,36 +75,7 @@
 - 👋 **`canceled`**: action canceled
 - 😮 **`unknown`**: should never happen
 
-## Examples
 
-### Usage
-
-```tsx
-import React from 'react'
-import { useDispatchAsync } from 'react-redux-dispatch-async'
-
-export default function MyUserInterface({ id }: { id: string }) {
-  // 👉 pass action and arguments into the array
-  const response = useDispatchAsync(getUserActionRequest, [id])
-
-  switch (response.status) {
-    case 'loading':
-      return <AppLoader />
-    case 'error':
-      return <Text>{response.error.message}</Text>
-    case 'success':
-      return <User {...response.result} />
-    case 'timeout':
-      return <Text>{'timeout ¯\\_(ツ)_//¯'}</Text>
-    case 'canceled':
-      return <Text>{'canceled ¯\\_(ツ)_//¯'}</Text>
-    default:
-      return null
-  }
-}
-```
-
-If you need more examples you can go to [github](https://github.com/xcarpentier/react-redux-dispatch-async-example) or to [codesandbox](https://codesandbox.io/s/react-redux-dispatch-async-rij31?file=/src/UserContainer.tsx).
 
 ### Configuration
 
